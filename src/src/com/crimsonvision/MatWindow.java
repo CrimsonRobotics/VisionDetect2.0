@@ -8,7 +8,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
@@ -27,18 +30,26 @@ public class MatWindow {
 		System.arraycopy(buffer, 0, targetPixels, 0, buffer.length);
 		return image;
 	}
-	public void runMainLoop(String args[], Mat webcamMatImage, JFrame frame, JLabel imageLabel){ //gets input stream and displays it
-		Image tempImage; 
+	public void runMainLoop(String args[], Mat webcamMatImage,Mat hsv, Mat thresh,JFrame frame, JLabel imageLabel, JFrame threshFrame, JLabel threshLabel ){
+ //gets input stream and displays it
+		Image tempImage;
+		Image tempImg;
 		VideoCapture capture = new VideoCapture(0);
 		capture.set(Videoio.CAP_PROP_FRAME_WIDTH, 320);
 		capture.set(Videoio.CAP_PROP_FRAME_HEIGHT, 240);
 		if(capture.isOpened()){
 			while(true){
 				capture.read(webcamMatImage);
+				Imgproc.cvtColor(webcamMatImage, hsv, Imgproc.COLOR_RGB2HSV);
+				Core.inRange(hsv, new Scalar(0, 100, 100), new Scalar(10, 255, 255), thresh);
 				if(!webcamMatImage.empty()){
 					tempImage = toBufferedImage(webcamMatImage);
+					tempImg = toBufferedImage(thresh);
+					ImageIcon imgIcon = new ImageIcon(tempImg, "Thresh Video");
 					ImageIcon imageIcon = new ImageIcon(tempImage, "Captured Video");
+					threshLabel.setIcon(imgIcon);
 					imageLabel.setIcon(imageIcon);
+					threshFrame.pack();
 					frame.pack(); 
 				}
 				else {
@@ -53,4 +64,5 @@ public class MatWindow {
 		
 	}
 }
+
 
