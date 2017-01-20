@@ -1,104 +1,137 @@
 package src.com.crimsonvision;
 
-import java.awt.Image;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.Videoio;
 
-public class MatWindow {
-	
-	private static Rect biggest = null;
-	private static Rect comparison = null ;
-	private static final Scalar redText = new Scalar (0,500,500);
-	private static ArrayList<MatOfPoint> particles;
-	private static List<MatOfPoint> particleRect;
+class Panel extends JPanel {
+	private static final long serialVersionUID = 1L;
+	private BufferedImage image;
 
-		public Image toBufferedImage(Mat matrix){  //converts Mat to Buffered image.
+	// Create a constructor method
+	public Panel() {
+		super();
+	}
 
-		int type = BufferedImage.TYPE_BYTE_GRAY;
-		if(matrix.channels() > 1){
-			type = BufferedImage.TYPE_3BYTE_BGR;
-		}
-		int bufferSize = matrix.channels()*matrix.cols()*matrix.rows();
-		byte [] buffer = new byte[bufferSize];
-		matrix.get(0, 0, buffer);//get all the pixels
-		BufferedImage image = new BufferedImage(matrix.cols(),matrix.rows(), type);
-		final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-		System.arraycopy(buffer, 0, targetPixels, 0, buffer.length);
+	private BufferedImage getimage() {
 		return image;
 	}
 
-	public void runMainLoop(String args[], Mat webcamMatImage,Mat hsv, Mat thresh,JFrame frame, JLabel imageLabel, JFrame threshFrame, JLabel threshLabel, Rect rect){
- //gets input stream and displays it
-		Image tempImage;
-		Image tempImg;
-		VideoCapture capture = new VideoCapture(0);
-		capture.set(Videoio.CAP_PROP_FRAME_WIDTH, 320);
-		capture.set(Videoio.CAP_PROP_FRAME_HEIGHT, 240);
-		if(capture.isOpened()){
-			while(true){
-				capture.read(webcamMatImage);
-				Imgproc.cvtColor(webcamMatImage, hsv, Imgproc.COLOR_RGB2HSV);
-				Core.inRange(hsv, new Scalar(55-27, 0, 106), new Scalar(55+27, 255, 255), thresh);
-				if(!webcamMatImage.empty()){
-					tempImage = toBufferedImage(webcamMatImage);
-					tempImg = toBufferedImage(thresh);
-					ImageIcon imgIcon = new ImageIcon(tempImg, "Thresh Video");
-					ImageIcon imageIcon = new ImageIcon(tempImage, "Captured Video");
-					threshLabel.setIcon(imgIcon);
-					imageLabel.setIcon(imageIcon);
-					threshFrame.pack();
-					frame.pack(); 
-					sortCont(thresh,webcamMatImage,rect);
-					
-				}
-				else {
-					System.out.println("--Frame not captured-- Break!");
-					break;
-				}
+	public void setimage(BufferedImage newimage) {
+		image = newimage;
+		return;
+	}
+
+	public void setimagewithMat(Mat newimage) {
+		image = this.matToBufferedImage(newimage);
+		return;
+	}
+
+	/**
+	 * Converts/writes a Mat into a BufferedImage.
+	 * 
+	 * @param matrix
+	 *            Mat of type CV_8UC3 or CV_8UC1
+	 * @return BufferedImage of type TYPE_3BYTE_BGR or TYPE_BYTE_GRAY
+	 */
+	public BufferedImage matToBufferedImage(Mat matrix) {
+		int cols = matrix.cols();
+		int rows = matrix.rows();
+		int elemSize = (int) matrix.elemSize();
+		byte[] data = new byte[cols * rows * elemSize];
+		int type;
+		matrix.get(0, 0, data);
+		switch (matrix.channels()) {
+		case 1:
+			type = BufferedImage.TYPE_BYTE_GRAY;
+			break;
+		case 3:
+			type = BufferedImage.TYPE_3BYTE_BGR;
+			// bgr to rgb
+			byte b;
+			for (int i = 0; i < data.length; i = i + 3) {
+				b = data[i];
+				data[i] = data[i + 2];
+				data[i + 2] = b;
 			}
+			break;
+		default:
+			return null;
 		}
-		else{
-			System.out.println("Couldn't open capture");
-		}
+		BufferedImage image2 = new BufferedImage(cols, rows, type);
+		image2.getRaster().setDataElements(0, 0, cols, rows, data);
+		return image2;
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		// BufferedImage temp=new BufferedImage(640, 480,
+		// BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage temp = getimage();
+		// Graphics2D g2 = (Graphics2D)g;
+		if (temp != null)
+			g.drawImage(temp, 10, 10, temp.getWidth(), temp.getHeight(), this);
+	}
+}
+
+public class MatWindow {
+
+	Mat image;
+	JFrame frame;
+	Panel panel;
+	JLabel fpsLabel;
+	
+	Date lastUpdateTime;
+
+	public MatWindow(int xSize, int ySize, String name) {
+		frame = new JFrame(name);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new FlowLayout());
+		frame.setSize(xSize, ySize);
+		
+		
+		
+		frame.setBounds(0, 20, frame.getWidth(), frame.getHeight());
+
+		lastUpdateTime = new Date();
+		panel = new Panel();
+		frame.setContentPane(panel);
+		frame.setVisible(true);
+		
+		fpsLabel = new JLabel("FPS: 0");
+		frame.add(fpsLabel);
+	}
+	
+	public MatWindow(String name) {
+		this(0, 0, name);
+	}
+
+	public void setImage(Mat image) {
+		this.image = image;
+		updateImage();
+	}
+
+	public void updateImage() {
+		Date currentTime = new Date();
+		fpsLabel.setText("FPS: " + (int)(1.0/((currentTime.getTime() - lastUpdateTime.getTime())/1000.0)));
+		
+		lastUpdateTime = currentTime;
+		
+		frame.setSize(image.width() + 40, image.height() + 100);
+		panel.setimagewithMat(image);
+		panel.repaint();
+		
 		
 	}
-	public static void sortCont(Mat threshImage,Mat mat, Rect rect){
-		particles = new ArrayList<MatOfPoint>();
-		 particleRect = new ArrayList<MatOfPoint>();
-		 Imgproc.findContours(threshImage, particles, new Mat(),
-					Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-		 int biggestWidth = 10;
-		 for(int i= particles.size()-1; i>0;i--){
-			 MatOfPoint contour = particles.get(i);
-			 comparison = Imgproc.boundingRect(contour);
-			 int width = comparison.width;
-			 if(width> biggestWidth){
-				 rect = Imgproc.boundingRect(contour);
-				
-			 }else{
-				 particles.remove(i);
-			 }
-			 if(biggest !=null)
-					Imgproc.rectangle(mat, rect.tl(), rect.br(), redText, 1, Core.LINE_8, 0);
-			 
-		 }
-}
+
 }
 
 
