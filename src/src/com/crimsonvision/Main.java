@@ -1,11 +1,17 @@
 package src.com.crimsonvision;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 public class Main {
@@ -13,21 +19,25 @@ public class Main {
 	private static JLabel regFeed;
 	private static JFrame threshFrame;
 	private static JLabel threshFeed;
+	private static Mat reg;
+	private static Mat hsv;
+	private static Mat thresh;
+	
 	static{
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 	public static void main(String args[]){
-		Mat reg = new Mat();
-		Mat hsv = new Mat();
-		Mat thresh = new Mat();
+		 reg = new Mat();
+		 hsv = new Mat();
+		 thresh = new Mat();
+		 
 		MatWindow mat = new MatWindow();
 		Main app = new Main();
 		app.initGui();
-		mat.runMainLoop(args, reg, hsv, thresh, regFrame, regFeed, threshFrame, threshFeed);
+		Rect biggest = null;
+		mat.runMainLoop(args, reg, hsv, thresh, regFrame, regFeed, threshFrame, threshFeed, biggest); 
 		
-	
-		
-		
+		//Imgproc.rectangle(reg, biggest.tl(), biggest.br(), redText);
 	}
 	
 	
@@ -48,7 +58,10 @@ public class Main {
 		
 	}
 
+	
+		 
+	}
+
 
 	
 	
-}
