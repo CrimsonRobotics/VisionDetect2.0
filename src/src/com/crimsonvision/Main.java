@@ -29,12 +29,13 @@ import src.com.crimsonvision.Utils;
 public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
+
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mat original = new Mat();
 		MatWindow window = new MatWindow("Camera");
 		MatWindow threshWindow = new MatWindow("Thresh");
 
-		VideoCapture camera = new VideoCapture(1);
+		VideoCapture camera = new VideoCapture(0);
 
 		JFrame jFrame = new JFrame("Option");
 		jFrame.setSize(200, 225);
@@ -173,6 +174,7 @@ public class Main {
 			
 			if (biggest != null) {
 				//Utils.pixelRatio(biggest);
+				CrimsonServer server = new CrimsonServer(biggest,original);
 				Core.line(original,new Point(original.width()/2,0), new Point(original.width()/2,original.height()) , new Scalar(0,500,500));
 				Point center = Utils.calculateMidpoint(biggest);//sets center point see Utils for more info
 				Double height = Utils.calculateHeight(biggest);//sets height see Utils for more info
@@ -189,6 +191,7 @@ public class Main {
 				Utils.setangle(original, biggest, 10, 350);//sets the angle see Utils class for more
 				Utils.calculateFocal(biggest);
 				Utils.calculateDistance(biggest);
+				//Utils.putAngle(original, biggest);
 		
 				//System.out.println();
 			}
@@ -199,7 +202,8 @@ public class Main {
 		}
 	}
 	
-		 
+	
+	
 	}
 
 

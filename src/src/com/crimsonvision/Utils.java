@@ -9,6 +9,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +32,7 @@ public class Utils {
 	private static final int targetHeight = 11;//inches
 	private static int focalLength = 265;
 	private static int distance = 59;
+	static NetworkTable table;
 	//16.375
 	//constructor
 	public Utils(){}
@@ -119,5 +122,6 @@ public class Utils {
 	public static void setangle(Mat mat, Rect rect, int x, int y){
 		Core.putText(mat, String.valueOf(calculateAngleOfBoundingBox(mat,rect)),new Point(x,y), Core.FONT_HERSHEY_PLAIN,1,redText);
 	}
+	
 	
 }
