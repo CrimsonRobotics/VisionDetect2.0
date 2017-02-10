@@ -15,8 +15,9 @@ public CrimsonServer(Rect rect, Mat mat) throws InterruptedException{
 }
 public void run(Rect rect, Mat mat){
 	NetworkTable.setClientMode();
-	NetworkTable.setIPAddress("10.183.25.127");
+	NetworkTable.setTeam(2526);
 	NetworkTable table = NetworkTable.getTable("datatable");
 	table.putNumber("Angle", Utils.calculateAngleOfBoundingBox(mat, rect));
+	//System.out.println(table.getNumber("Number",1000.0));
 }
 }

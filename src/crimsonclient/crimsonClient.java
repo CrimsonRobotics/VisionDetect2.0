@@ -18,9 +18,12 @@ public class crimsonClient {
         {
 Logger.getLogger(crimsonClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-	System.out.println(table.getNumber("Angle", -1000.0));
+	System.out.println(table.getNumber("Number", -1000.0));
 	}
 	
+		/*NetworkTable.setClientMode();
+		NetworkTable.setIPAddress("10.25.26.2");
+		NetworkTable table = NetworkTable.getTable("datatable");*/
 	
 	}
 }

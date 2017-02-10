@@ -35,7 +35,7 @@ public class Main {
 		MatWindow window = new MatWindow("Camera");
 		MatWindow threshWindow = new MatWindow("Thresh");
 
-		VideoCapture camera = new VideoCapture(0);
+		VideoCapture camera = new VideoCapture(1);
 
 		JFrame jFrame = new JFrame("Option");
 		jFrame.setSize(200, 225);
