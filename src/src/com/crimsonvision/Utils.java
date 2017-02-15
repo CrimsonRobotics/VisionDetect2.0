@@ -75,26 +75,26 @@ public class Utils {
 		return(calculateHeight(in)*calculateWidth(in));
 	}
 	public static void putText(Mat mat,double size, int x, int y){
-		Core.putText(mat, String.valueOf(size),new Point(x,y), Core.FONT_HERSHEY_PLAIN,1,redText);
+		Imgproc.putText(mat, String.valueOf(size),new Point(x,y), Core.FONT_HERSHEY_PLAIN,1,redText);
 	}
 	public static void setLabel(Mat mat, String string, int x, int y){
-		Core.putText(mat, string,new Point(x,y), Core.FONT_HERSHEY_PLAIN,1,redText);
+		Imgproc.putText(mat, string,new Point(x,y), Core.FONT_HERSHEY_PLAIN,1,redText);
 	}
 	public static void putCircle(Mat mat,int diameter, int thick, Rect rect){
-		Core.circle(mat,calculateMidpoint(rect), diameter, greenText,-1);
+		Imgproc.circle(mat,calculateMidpoint(rect), diameter, greenText,-1);
 	}
 	public static void putline(Mat mat){
-		Core.line(mat,new Point(mat.width()/2,0), new Point(mat.width()/2,mat.height()) , redText );
+		Imgproc.line(mat,new Point(mat.width()/2,0), new Point(mat.width()/2,mat.height()) , redText );
 	}
 	public static void putrect(Mat mat, Rect rec){
-		Core.rectangle(mat, rec.tl(), rec.br(),redText );
+		Imgproc.rectangle(mat, rec.tl(), rec.br(),redText );
 		}
 	public static String res(Mat mat){
 		String resolution = "width " + mat.width() + " height " + mat.height();
 		return resolution;
 	}
 	public static void setRes(Mat mat){
-		Core.putText(mat, res(mat), new Point(0,10), Core.FONT_HERSHEY_PLAIN, 1, new Scalar(0, 500, 500));
+		Imgproc.putText(mat, res(mat), new Point(0,10), Core.FONT_HERSHEY_PLAIN, 1, new Scalar(0, 500, 500));
 	}
 	public static void detectSide(Mat mat,Rect rect){
 		if(calculateMidpoint(rect).x==mat.width()/2 && calculateMidpoint(rect).x<=mat.width()/2 +100&& calculateMidpoint(rect).x>=mat.width()/2 - 100){
@@ -120,7 +120,7 @@ public class Utils {
 		return obj.x - mid.x;
 	}
 	public static void setangle(Mat mat, Rect rect, int x, int y){
-		Core.putText(mat, String.valueOf(calculateAngleOfBoundingBox(mat,rect)),new Point(x,y), Core.FONT_HERSHEY_PLAIN,1,redText);
+		Imgproc.putText(mat, String.valueOf(calculateAngleOfBoundingBox(mat,rect)),new Point(x,y), Core.FONT_HERSHEY_PLAIN,1,redText);
 	}
 	
 	

@@ -20,7 +20,11 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.highgui.VideoCapture;
+import org.opencv.videoio.*;
+
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.tables.ITable;
+
 import org.opencv.imgproc.Imgproc;
 
 import src.com.crimsonvision.GUI;
@@ -34,8 +38,11 @@ public class Main {
 		Mat original = new Mat();
 		MatWindow window = new MatWindow("Camera");
 		MatWindow threshWindow = new MatWindow("Thresh");
-
-		VideoCapture camera = new VideoCapture(1);
+		NetworkTable.setClientMode();
+		NetworkTable.setTeam(2526);
+		NetworkTable.initialize();
+		//ITable table = NetworkTable.getTable("datatable");
+		VideoCapture camera = new VideoCapture(0);
 
 		JFrame jFrame = new JFrame("Option");
 		jFrame.setSize(200, 225);
@@ -175,7 +182,8 @@ public class Main {
 			if (biggest != null) {
 				//Utils.pixelRatio(biggest);
 				CrimsonServer server = new CrimsonServer(biggest,original);
-				Core.line(original,new Point(original.width()/2,0), new Point(original.width()/2,original.height()) , new Scalar(0,500,500));
+				//table.putNumber("Angle", 45.0);
+				Imgproc.line(original,new Point(original.width()/2,0), new Point(original.width()/2,original.height()) , new Scalar(0,500,500));
 				Point center = Utils.calculateMidpoint(biggest);//sets center point see Utils for more info
 				Double height = Utils.calculateHeight(biggest);//sets height see Utils for more info
 				Double width = Utils.calculateWidth(biggest);//sets width see Utils for more info
