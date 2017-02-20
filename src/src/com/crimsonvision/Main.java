@@ -41,8 +41,7 @@ public class Main {
 		NetworkTable.setClientMode();
 		NetworkTable.setTeam(2526);
 		NetworkTable.initialize();
-		//ITable table = NetworkTable.getTable("datatable");
-		VideoCapture camera = new VideoCapture(0);
+		VideoCapture camera = new VideoCapture(1);
 
 		JFrame jFrame = new JFrame("Option");
 		jFrame.setSize(200, 225);
@@ -181,8 +180,11 @@ public class Main {
 			
 			if (biggest != null) {
 				//Utils.pixelRatio(biggest);
-				CrimsonServer server = new CrimsonServer(biggest,original);
+				//CrimsonServer server = new CrimsonServer(biggest,original);
 				//table.putNumber("Angle", 45.0);
+				ITable table = NetworkTable.getTable("datatable");
+				table.putNumber("Angle", Utils.calculateAngleOfBoundingBox(original, biggest));
+				System.out.println(Utils.calculateAngleOfBoundingBox(original, biggest));
 				Imgproc.line(original,new Point(original.width()/2,0), new Point(original.width()/2,original.height()) , new Scalar(0,500,500));
 				Point center = Utils.calculateMidpoint(biggest);//sets center point see Utils for more info
 				Double height = Utils.calculateHeight(biggest);//sets height see Utils for more info
