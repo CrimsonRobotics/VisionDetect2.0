@@ -22,8 +22,6 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.videoio.*;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.tables.ITable;
 
 import org.opencv.imgproc.Imgproc;
 
@@ -36,12 +34,10 @@ public class Main {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mat original = new Mat();
-		MatWindow window = new MatWindow("Camera");
+		MatWindow window = new MatWindow("HEllo");
 		MatWindow threshWindow = new MatWindow("Thresh");
-		NetworkTable.setClientMode();
-		NetworkTable.setTeam(2526);
-		NetworkTable.initialize();
-		VideoCapture camera = new VideoCapture(1);
+	
+		VideoCapture camera = new VideoCapture(2);
 
 		JFrame jFrame = new JFrame("Option");
 		jFrame.setSize(200, 225);
@@ -180,10 +176,7 @@ public class Main {
 			
 			if (biggest != null) {
 				//Utils.pixelRatio(biggest);
-				//CrimsonServer server = new CrimsonServer(biggest,original);
-				//table.putNumber("Angle", 45.0);
-				ITable table = NetworkTable.getTable("datatable");
-				table.putNumber("Angle", Utils.calculateAngleOfBoundingBox(original, biggest));
+				
 				System.out.println(Utils.calculateAngleOfBoundingBox(original, biggest));
 				Imgproc.line(original,new Point(original.width()/2,0), new Point(original.width()/2,original.height()) , new Scalar(0,500,500));
 				Point center = Utils.calculateMidpoint(biggest);//sets center point see Utils for more info

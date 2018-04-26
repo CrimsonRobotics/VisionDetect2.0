@@ -9,7 +9,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public class Utils {
 	private static final int targetHeight = 11;//inches
 	private static int focalLength = 265;
 	private static int distance = 59;
-	static NetworkTable table;
+	
 	//16.375
 	//constructor
 	public Utils(){}

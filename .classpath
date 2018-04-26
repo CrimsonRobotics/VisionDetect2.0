@@ -4,5 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Opencv3.0"/>
 	<classpathentry kind="lib" path="/home/muhammad/Downloads/NetworkTables-3.0.0-20151104.231451-1-desktop.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCV"/>
+	<classpathentry kind="lib" path="C:/Users/mtahs/Downloads/NetworkTables-3.0.0-20160107.180902-2-desktop.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
